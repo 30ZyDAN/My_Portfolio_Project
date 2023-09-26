@@ -21,6 +21,7 @@ name,
 year
 ORDER BY Total_number DESC
 
+
 ## Explanation Explanation of the CTE (top_five_boys_name):
 
 WITH top_five_boys_name AS (
