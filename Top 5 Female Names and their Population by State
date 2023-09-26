@@ -21,6 +21,7 @@ name,
 state
 ORDER BY Total_number DESC
 
+
 ## Explanation:
 
 WITH top_five_girl_name AS (
