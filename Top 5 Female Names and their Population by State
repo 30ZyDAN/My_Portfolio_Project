@@ -1,0 +1,78 @@
+WITH top_five_girl_name AS (SELECT
+DISTINCT TRIM(name) AS Names,
+SUM(number) AS Total_number
+FROM `bigquery-public-data.usa_names.usa_1910_current`
+WHERE 
+gender = "F"
+GROUP BY
+Names
+ORDER by Total_number DESC
+Limit 5)
+SELECT
+name,
+year,
+SUM(number) AS Total_number
+FROM top_five_girl_name AS five_name_of_girls
+INNER JOIN `bigquery-public-data.usa_names.usa_1910_current` AS current_names ON current_names.name =  five_name_of_girls.Names
+WHERE 
+gender = "F"
+GROUP BY
+name,
+year
+ORDER BY Total_number DESC
+
+## Explanation:
+This section defines a Common Table Expression (CTE) named top_five_girl_name. Here's what it does:
+
+WITH top_five_girl_name AS (
+  SELECT
+    DISTINCT TRIM(name) AS Names,
+    SUM(number) AS Total_number
+  FROM `bigquery-public-data.usa_names.usa_1910_current`
+  WHERE gender = "F"
+  GROUP BY Names
+  ORDER by Total_number DESC
+  Limit 5
+)
+It selects data from the usa_names.usa_1910_current table in the BigQuery public dataset.
+It filters the data to only include rows where the gender column is equal to "F", meaning it's selecting data for females.
+It uses the TRIM function to remove any leading or trailing whitespace from the name column values.
+It groups the data by the Names column (which contains distinct female names) and calculates the sum of the number column, which represents the total number of occurrences for each name.
+It orders the results in descending order by the total number and limits the output to the top 5 names.
+
+## Explanation:
+This main query builds on the previously defined top_five_girl_name Common Table Expression (CTE) and performs the following operations:
+SELECT clause:
+
+SELECT
+  name,
+  year,
+  SUM(number) AS Total_number
+FROM top_five_girl_name AS five_name_of_girls
+INNER JOIN `bigquery-public-data.usa_names.usa_1910_current` AS current_names ON current_names.name = five_name_of_girls.Names
+WHERE gender = "F"
+GROUP BY name, year
+ORDER BY Total_number DESC
+
+
+It selects three columns to be included in the output:
+name: The female name.
+year: The year in which the data is recorded.
+SUM(number) AS Total_number: The total number of occurrences of the name in all states for a given year.
+
+FROM clause:
+It specifies two data sources to retrieve data from:
+top_five_girl_name AS five_name_of_girls: This is the CTE that contains the top 5 female names and their total occurrences. It is aliased as five_name_of_girls.
+bigquery-public-data.usa_names.usa_1910_current AS current_names: This is the main dataset containing information on names and their occurrences. It is aliased as current_names.
+
+INNER JOIN:
+It performs an inner join between five_name_of_girls and current_names based on the name column. This join links the top 5 female names with the dataset containing all names, allowing you to retrieve data for these specific names.
+
+WHERE clause:
+It further filters the data to only include rows where the gender is "F," ensuring that only female names are included in the results.
+
+GROUP BY clause:
+It groups the results by name and year. This grouping ensures that you get the total number of occurrences for each of the top 5 female names for each year.
+
+ORDER BY clause:
+It orders the results by the Total_number column in descending order. This arranges the output so that the most popular female names for each year appear at the top.
