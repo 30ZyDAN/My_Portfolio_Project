@@ -9,6 +9,7 @@ Names
 ORDER by Total_number DESC
 Limit 5
 
+
 ## Explanation:
 
 This SQL code fetches the top 5 most common male names from a dataset, along with their total occurrences.
