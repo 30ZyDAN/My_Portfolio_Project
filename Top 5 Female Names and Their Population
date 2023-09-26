@@ -1,0 +1,37 @@
+
+SELECT
+DISTINCT TRIM(name) AS Names,
+SUM(number) AS Total_number
+FROM `bigquery-public-data.usa_names.usa_1910_current`
+WHERE 
+gender = "F"
+GROUP BY
+Names
+ORDER by Total_number DESC
+Limit 5
+
+
+
+## Explanation:
+
+This SQL code fetches the top 5 most common female names from a dataset, along with their total occurrences.
+
+1. SELECT clause:
+   - Retrieves two columns:
+     - Trimmed names (with leading/trailing spaces removed) as 'Names'.
+     - Total occurrence count as 'Total_number' or their population.
+
+2. FROM clause:
+   - Specifies the data source: 'bigquery-public-data.usa_names.usa_1910_current'.
+
+3. WHERE clause:
+   - Filters for females by 'gender = "F"'.
+
+4. GROUP BY clause:
+   - Groups data by 'Names' to combine identical names.
+
+5. ORDER BY clause:
+   - Sorts results by 'Total_number' in descending order.
+
+6. Limit 5:
+   - Displays only the top 5 results.
