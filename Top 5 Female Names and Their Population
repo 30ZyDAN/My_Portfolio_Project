@@ -1,4 +1,3 @@
-
 SELECT
 DISTINCT TRIM(name) AS Names,
 SUM(number) AS Total_number
