@@ -1,0 +1,71 @@
+WITH top_five_boys_name AS (SELECT
+DISTINCT TRIM(name) AS Names,
+SUM(number) AS Total_number
+FROM `bigquery-public-data.usa_names.usa_1910_current`
+WHERE 
+gender = "M"
+GROUP BY
+Names
+ORDER by Total_number DESC
+Limit 5)
+SELECT
+name,
+year,
+SUM(number) AS Total_number
+FROM top_five_boys_name AS five_name_of_boys
+INNER JOIN `bigquery-public-data.usa_names.usa_1910_current` AS current_names ON current_names.name = five_name_of_boys.Names
+WHERE 
+gender = "M"
+GROUP BY 
+name,
+year
+ORDER BY Total_number DESC
+
+## Explanation Explanation of the CTE (top_five_boys_name):
+
+WITH top_five_boys_name AS (
+    SELECT
+        DISTINCT TRIM(name) AS Names,
+        SUM(number) AS Total_number
+    FROM `bigquery-public-data.usa_names.usa_1910_current`
+    WHERE 
+        gender = "M"
+    GROUP BY
+        Names
+    ORDER by Total_number DESC
+    Limit 5
+)
+
+This CTE is named top_five_boys_name and serves as a temporary result set that is used within the subsequent main query.
+It selects unique (DISTINCT) boys' names (Names) from the usa_1910_current table, trims any leading or trailing spaces from the names, and calculates the total number of occurrences (Total_number) of each name.
+The WHERE clause filters the data to only include names with a gender value of "M," which indicates male names.
+The GROUP BY clause groups the names so that each unique name appears only once in the result set.
+The ORDER BY clause sorts the result by the total number of occurrences (Total_number) in descending order.
+The LIMIT 5 clause restricts the result to the top five names with the highest total occurrences.
+
+## Explanation: 
+
+SELECT
+    name,
+    year,
+    SUM(number) AS Total_number
+FROM top_five_boys_name AS five_name_of_boys
+INNER JOIN `bigquery-public-data.usa_names.usa_1910_current` AS current_names ON current_names.name = five_name_of_boys.Names
+WHERE 
+    gender = "M"
+GROUP BY 
+    name,
+    year
+ORDER BY Total_number DESC
+
+The main query builds upon the CTE top_five_boys_name to further analyze the data.
+It selects the columns name, year, and the calculated Total_number (the sum of occurrences) from two sources:
+The CTE top_five_boys_name (aliased as five_name_of_boys), which contains the top five boys' names and their total occurrences.
+The usa_1910_current table (aliased as current_names), which contains detailed information about names by year and gender.
+The INNER JOIN clause links the CTE and the table on the common column Names, which represents the boys' names.
+The WHERE clause further filters the data to only include names with a gender value of "M," ensuring that only male names are included.
+The GROUP BY clause groups the data by name and year, aggregating the total occurrences for each name in each year.
+Finally, the ORDER BY clause sorts the result by the total number of occurrences (Total_number) in descending order, showing the most popular names at the top of the result set.
+
+## In summary, this SQL code first identifies the top five boys' names and their total occurrences and then retrieves detailed information about these names by year and gender, 
+presenting the data in descending order of total occurrences. It provides insights into the popularity of these names over the years.
