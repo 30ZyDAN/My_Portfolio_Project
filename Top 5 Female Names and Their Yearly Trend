@@ -1,0 +1,57 @@
+WITH top_five_girl_name AS (SELECT
+DISTINCT TRIM(name) AS Names,
+SUM(number) AS Total_number
+FROM `bigquery-public-data.usa_names.usa_1910_current`
+WHERE 
+gender = "F"
+GROUP BY
+Names
+ORDER by Total_number DESC
+Limit 5)
+SELECT
+name,
+state,
+SUM(number) AS Total_number
+FROM top_five_girl_name AS five_name_of_girls
+INNER JOIN `bigquery-public-data.usa_names.usa_1910_current` AS current_names ON current_names.name =  five_name_of_girls.Names
+WHERE 
+gender = "F"
+GROUP BY
+name,
+state
+ORDER BY Total_number DESC
+
+## Explanation:
+
+WITH top_five_girl_name AS (
+    SELECT
+        DISTINCT TRIM(name) AS Names,
+        SUM(number) AS Total_number
+    FROM `bigquery-public-data.usa_names.usa_1910_current`
+    WHERE 
+        gender = "F"
+    GROUP BY
+        Names
+    ORDER by Total_number DESC
+    Limit 5
+)
+
+This CTE is named top_five_girl_name and serves as a temporary result set that is used within the subsequent main query.
+It selects unique (DISTINCT) female names (Names) from the usa_1910_current table, trims any leading or trailing spaces from the names, and calculates the total number of occurrences (Total_number) of each name.
+The WHERE clause filters the data to only include names with a gender value of "F," which indicates female names.
+The GROUP BY clause groups the names so that each unique name appears only once in the result set.
+The ORDER BY clause sorts the result by the total number of occurrences (Total_number) in descending order.
+The LIMIT 5 clause restricts the result to the top five names with the highest total occurrences among females.
+
+## Explanation:
+
+The main query builds upon the CTE top_five_girl_name to further analyze the data, focusing on the top five female names and their popularity by state.
+It selects the columns name, state, and the calculated Total_number (the sum of occurrences) from two sources:
+The CTE top_five_girl_name (aliased as five_name_of_girls), which contains the top five female names and their total occurrences.
+The usa_1910_current table (aliased as current_names), which contains detailed information about names by state, year, and gender.
+The INNER JOIN clause links the CTE and the table on the common column Names, which represents the female names.
+The WHERE clause further filters the data to only include names with a gender value of "F," ensuring that only female names are included.
+The GROUP BY clause groups the data by name and state, aggregating the total occurrences for each name in each state.
+Finally, the ORDER BY clause sorts the result by the total number of occurrences (Total_number) in descending order, showing the most popular female names by state.
+
+In summary, this SQL code identifies the top five female names, their total occurrences, and their popularity by state, providing insights into the geographic distribution of these names.
